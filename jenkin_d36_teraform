@@ -1,0 +1,24 @@
+pipeline {
+ agent any
+  stages {
+   stage('Check Terraform') {
+    steps {
+      script {
+       if (fileExists('/usr/bin/terraform')) {
+         echo "File /usr/bin/terraform found!"
+       } else {
+        echo "File /usr/bin/terraform not found! Installing Terraform..."
+// Download HashiCorp GPG key and add it to keyring
+       sh 'wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg'
+// Add HashiCorp repository to sources.list.d
+      sh 'echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null'
+// Update package list
+     sh 'sudo apt-get update'
+// Install Terraform
+     sh 'sudo apt-get install terraform'
+    }
+   }
+  }
+ }
+}
+}
