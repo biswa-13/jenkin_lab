@@ -1,0 +1,16 @@
+pipeline {
+ agent any
+ stages {
+  stage('Check ansible') {
+   steps {
+    script {
+     if (fileExists('/usr/bin/ansible')) {
+        echo "File /usr/bin/ansible found!"
+      } else {
+        echo "File /usr/bin/ansible not found!"
+       }
+     }
+   }
+  }
+ }
+}
